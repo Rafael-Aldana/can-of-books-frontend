@@ -28,9 +28,41 @@ class BestBooks extends React.Component {
   }
 
   deleteBooks = async (id) => {
-    let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+    try {
+      let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+      await axios.delete(url);
+      let updatedBooks = this.state.cats.filter(cat => cat._id !== id);
+      this.setState({
+        books: updatedBooks,
+      })
 
-    await axios.delete(url);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  handleBookSubmit = (event) => {
+    event.preventDefault();
+
+    let newBook = {
+      title: event.target.title.value,
+      description: event.target.description.value,
+      status: event.target.status.value
+    }
+    console.log('New Book from form ->', newBook);
+    this.postBook(newBook);
+  }
+
+  postBook = async (bookObj) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER}/books`;
+      let createdBook = await axios.post(url, bookObj);
+      this.setState({
+        books: [...this.state.books, createdBook.data]
+      })
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   componentDidMount() {
@@ -41,31 +73,31 @@ class BestBooks extends React.Component {
   render() {
 
     /* TODO: render all the books in a Carousel */
-// Carousel syntax taken from in class code review
+    // Carousel syntax taken from in class code review
     return (
       <>
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
         {this.state.books.length ? (
-        <Carousel >
-          {this.state.books.map((book, index) => {
-            return (
-          <Carousel.Item>
-            <img src={test} alt="books" />
-            <p>{book.title}</p>
-            <p>{book.description}</p>
-            {book.status ? (
-              <p>This book is available</p>
-            ) : (
-              <p>This book is not available</p>
-            )}
+          <Carousel >
+            {this.state.books.map((book, index) => {
+              return (
+                <Carousel.Item>
+                  <img src={test} alt="books" />
+                  <p>{book.title}</p>
+                  <p>{book.description}</p>
+                  {book.status ? (
+                    <p>This book is available</p>
+                  ) : (
+                    <p>This book is not available</p>
+                  )}
 
-          </Carousel.Item>
-            )
-          })}
-        </Carousel>
+                </Carousel.Item>
+              )
+            })}
+          </Carousel>
         ) : (
           <h3>No Books Found</h3>
-        )} 
+        )}
       </>
     )
   }
