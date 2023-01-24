@@ -4,6 +4,7 @@ import Footer from './Footer';
 import BestBooks from './BestBooks';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import About from './About';
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,6 +22,19 @@ class App extends React.Component {
   };
 
 
+  deleteBooks = async (id) => {
+    let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+
+    await axios.delete(url);
+
+    let updatedBooks = this.state.books.filter(book => book._id !== id)
+    this.setState({
+      books: updatedBooks
+    })
+  }
+
+  
+
 
 
 
@@ -33,6 +47,11 @@ class App extends React.Component {
             <Route
               exact path="/"
               element={<BestBooks />}
+            >
+            </Route>
+            <Route
+              exact path="/about"
+              element={<About />}
             >
             </Route>
             {/* PLACEHOLDER: add a route with a path of '/about' that renders the `About` component */}
