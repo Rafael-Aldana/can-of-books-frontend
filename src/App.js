@@ -12,7 +12,6 @@ import {
 
 
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -21,21 +20,8 @@ class App extends React.Component {
     }
   };
 
-  getBooks = async () => {
-    try {
-      let url = `${process.env.REACT_APP_API_SERVER}/books`;
-      let bookData = await axios.get(url);
-      this.setState({ books: bookData.data });
 
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
 
-componentDidMount(){
-  this.getBooks();
-}
 
 
   render() {
