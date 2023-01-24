@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
+import test from './bookIMG.jpg'
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -14,14 +15,22 @@ class BestBooks extends React.Component {
 
   getBooks = async () => {
     try {
-      let url = `${process.env.REACT_APP_API_SERVER}/books`;
+      let url = `${process.env.REACT_APP_SERVER}/books`;
       let bookData = await axios.get(url);
-      this.setState({ books: bookData.data });
+      this.setState({
+        books: bookData.data
+      });
 
     }
     catch (error) {
       console.log(error.response);
     }
+  }
+
+  deleteBooks = async (id) => {
+    let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+
+    await axios.delete(url);
   }
 
   componentDidMount() {
@@ -32,33 +41,31 @@ class BestBooks extends React.Component {
   render() {
 
     /* TODO: render all the books in a Carousel */
-
+// Carousel syntax taken from in class code review
     return (
       <>
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
         {this.state.books.length ? (
-        <Carousel>
-          {this.state.books.map(books => 0 + books)}
+        <Carousel >
+          {this.state.books.map((book, index) => {
+            return (
           <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="holder.js/800x400?text=First slide&bg=373940"
-              alt="First slide"
-            />
-            <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-        </Carousel>
+            <img src={test} alt="books" />
+            <p>{book.title}</p>
+            <p>{book.description}</p>
+            {book.status ? (
+              <p>This book is available</p>
+            ) : (
+              <p>This book is not available</p>
+            )}
 
+          </Carousel.Item>
+            )
+          })}
+        </Carousel>
         ) : (
           <h3>No Books Found</h3>
         )} 
-
-
-
-
       </>
     )
   }
