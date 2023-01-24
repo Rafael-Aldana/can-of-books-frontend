@@ -14,7 +14,7 @@ class BestBooks extends React.Component {
 
   getBooks = async () => {
     try {
-      let url = `${process.env.REACT_APP_API_SERVER}/books`;
+      let url = `${process.env.REACT_APP_SERVER}/books`;
       let bookData = await axios.get(url);
       this.setState({ books: bookData.data });
 
@@ -51,14 +51,9 @@ class BestBooks extends React.Component {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
-
         ) : (
           <h3>No Books Found</h3>
         )} 
-
-
-
-
       </>
     )
   }
