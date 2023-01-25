@@ -108,7 +108,10 @@ class BestBooks extends React.Component {
                   ) : (
                     <p>This book is not available</p>
                   )}
-
+                  <Carousel.Caption>
+                  <Button onClick={() => {this.deleteBooks(book._id)} } variant="danger"> Delete a Book</Button>  
+                  </Carousel.Caption>
+                  
                 </Carousel.Item>
               )
             })}
@@ -117,8 +120,8 @@ class BestBooks extends React.Component {
           <h3>No Books Found</h3>
         )}
         <Button variant="secondary" onClick={this.handleShow}>Add a Book</Button>
-        
-      <BookFormModal show={this.state.showModal} handleClose={this.handleClose} handleBookSubmit={this.handleBookSubmit}/>
+
+        <BookFormModal show={this.state.showModal} handleClose={this.handleClose} handleBookSubmit={this.handleBookSubmit} />
       </>
     )
   }
