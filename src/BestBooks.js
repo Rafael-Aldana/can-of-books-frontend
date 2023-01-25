@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import img from './bookIMG.jpg'
 import { Container, Form, Button } from 'react-bootstrap';
 import BookFormModal from './BookFormModal';
+import UpdateBookForm from './UpdateBookForm';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class BestBooks extends React.Component {
     this.state = {
       books: [],
       showModal: false,
+      showUpdateForm: false
 
     }
   }
@@ -23,6 +25,18 @@ class BestBooks extends React.Component {
   handleShow = () => {
     this.setState({
       showModal: true,
+    });
+  }
+handleCloseUpdate = () => {
+  this.setState({
+    showUpdateForm: false,
+  })
+}
+
+
+  handleShowUpdate = () => {
+    this.setState({
+      showUpdateForm: true,
     });
   }
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
@@ -79,6 +93,26 @@ class BestBooks extends React.Component {
       console.log(error.message);
     }
   }
+  // ********* 
+  updateBooks = async (bookToUpdate) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER_URL}/books/${bookToUpdate._id}`;
+      let updatedBook = await axios.put(url, bookToUpdate);
+      let updatedBookArray = this.state.books.map(existingBook => {
+        return existingBook._id === bookToUpdate._id
+          ? updatedBook.data
+          : existingBook
+      });
+      this.setState({
+        books: updatedBookArray
+      })
+      this.handleCloseUpdate();
+
+    } catch (error) {
+      console.log(error.message);
+    }
+    
+  }
 
   componentDidMount() {
     this.getBooks();
@@ -97,6 +131,7 @@ class BestBooks extends React.Component {
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
         {this.state.books.length ? (
           <Carousel >
+
             {this.state.books.map((book, index) => {
               return (
                 <Carousel.Item key={book.title + index}>
@@ -109,9 +144,14 @@ class BestBooks extends React.Component {
                     <p>This book is not available</p>
                   )}
                   <Carousel.Caption>
-                  <Button onClick={() => {this.deleteBooks(book._id)} } variant="danger"> Delete a Book</Button>  
+                    <Button onClick={() => { this.deleteBooks(book._id) }} variant="danger"> Delete a Book</Button>
+                    <Button onClick={() => { this.handleShowUpdate()}} variant="info">Update</Button>
+                    {this.state.showUpdateForm && 
+                    <UpdateBookForm show={this.state.showUpdateForm} book={book} handleUpdateBook={this.updateBooks} />}
                   </Carousel.Caption>
-                  
+
+
+
                 </Carousel.Item>
               )
             })}
