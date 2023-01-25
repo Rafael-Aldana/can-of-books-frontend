@@ -29,9 +29,9 @@ class BestBooks extends React.Component {
 
   deleteBooks = async (id) => {
     try {
-      let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+      let url = `${process.env.REACT_APP_SERVER}/books/${id}`
       await axios.delete(url);
-      let updatedBooks = this.state.cats.filter(cat => cat._id !== id);
+      let updatedBooks = this.state.books.filter(book => book._id !== id);
       this.setState({
         books: updatedBooks,
       })
@@ -53,10 +53,10 @@ class BestBooks extends React.Component {
     this.postBook(newBook);
   }
 
-  postBook = async (bookObj) => {
+  postBook = async (newBook) => {
     try {
       let url = `${process.env.REACT_APP_SERVER}/books`;
-      let createdBook = await axios.post(url, bookObj);
+      let createdBook = await axios.post(url, newBook);
       this.setState({
         books: [...this.state.books, createdBook.data]
       })
