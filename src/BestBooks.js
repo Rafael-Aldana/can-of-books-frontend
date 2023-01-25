@@ -1,22 +1,35 @@
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
-import test from './bookIMG.jpg'
+import img from './bookIMG.jpg'
 import { Container, Form, Button } from 'react-bootstrap';
+import BookFormModal from './BookFormModal';
 
 class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: []
+      books: [],
+      showModal: false,
+
     }
   }
 
+  handleClose = () => {
+    this.setState({
+      showModal: false,
+    })
+  };
+  handleShow = () => {
+    this.setState({
+      showModal: true,
+    });
+  }
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
 
   getBooks = async () => {
     try {
-      let url = `${process.env.REACT_APP_SERVER}/books`;
+      let url = `${process.env.REACT_APP_SERVER_URL}/books`;
       let bookData = await axios.get(url);
       this.setState({
         books: bookData.data
@@ -28,43 +41,43 @@ class BestBooks extends React.Component {
     }
   }
 
-  // deleteBooks = async (id) => {
-  //   try {
-  //     let url = `${process.env.REACT_APP_SERVER}/books/${id}`
-  //     await axios.delete(url);
-  //     let updatedBooks = this.state.books.filter(book => book._id !== id);
-  //     this.setState({
-  //       books: updatedBooks,
-  //     })
+  deleteBooks = async (id) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER_URL}/books/${id}`
+      await axios.delete(url);
+      let updatedBooks = this.state.books.filter(book => book._id !== id);
+      this.setState({
+        books: updatedBooks,
+      })
 
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
-  // handleBookSubmit = (event) => {
-  //   event.preventDefault();
+  handleBookSubmit = (event) => {
+    event.preventDefault();
 
-  //   let newBook = {
-  //     title: event.target.title.value,
-  //     description: event.target.description.value,
-  //     status: event.target.status.value
-  //   }
-  //   console.log('New Book from form ->', newBook);
-  //   this.postBook(newBook);
-  // }
+    let newBook = {
+      title: event.target.title.value,
+      description: event.target.description.value,
+      status: event.target.status.value
+    }
+    console.log('New Book from form ->', newBook);
+    this.postBook(newBook);
+  }
 
-  // postBook = async (bookObj) => {
-  //   try {
-  //     let url = `${process.env.REACT_APP_SERVER}/books`;
-  //     let createdBook = await axios.post(url, bookObj);
-  //     this.setState({
-  //       books: [...this.state.books, createdBook.data]
-  //     })
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
+  postBook = async (bookObj) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER_URL}/books`;
+      let createdBook = await axios.post(url, bookObj);
+      this.setState({
+        books: [...this.state.books, createdBook.data]
+      })
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   componentDidMount() {
     this.getBooks();
@@ -85,8 +98,8 @@ class BestBooks extends React.Component {
           <Carousel >
             {this.state.books.map((book, index) => {
               return (
-                <Carousel.Item>
-                  <img src={test} alt="books" />
+                <Carousel.Item key={book.title + index}>
+                  <img src={img} alt="books" />
                   <p>{book.title}</p>
                   <p>{book.description}</p>
                   {book.status ? (
@@ -102,24 +115,9 @@ class BestBooks extends React.Component {
         ) : (
           <h3>No Books Found</h3>
         )}
-        <Container className="mt-5">
-          <Form onSubmit={this.handleBookSubmit}>
-            <Form.Group controlId="title">
-              <Form.Label>Title</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
-            <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
-            <Form.Group controlId="status">
-              <Form.Label>Status</Form.Label>
-              <Form.Check type="checkbox" label="Available" />
-              <Form.Check type="checkbox" label="Unavailable" />
-            </Form.Group>
-            <Button type="submit">Add Book</Button>
-          </Form>
-        </Container>
+        <Button variant="secondary" onClick={this.handleShow}>Add a Book</Button>
+        
+      <BookFormModal show={this.state.showModal} handleClose={this.handleClose} handleBookSubmit={this.handleBookSubmit}/>
       </>
     )
   }
