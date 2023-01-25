@@ -65,6 +65,7 @@ class BestBooks extends React.Component {
     }
     console.log('New Book from form ->', newBook);
     this.postBook(newBook);
+    this.handleClose();
   }
 
   postBook = async (bookObj) => {
