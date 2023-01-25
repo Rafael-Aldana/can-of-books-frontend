@@ -23,7 +23,7 @@ class App extends React.Component {
 
 
   deleteBooks = async (id) => {
-    let url = `{process.env.REACT_APP_SERVER}/books/${id}`
+    let url = `${process.env.REACT_APP_SERVER_URL}/books/${id}`
 
     await axios.delete(url);
 
