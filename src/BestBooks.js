@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import img from './bookIMG.jpg'
-import { Container, Form, Button } from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import BookFormModal from './BookFormModal';
 import UpdateBookForm from './UpdateBookForm';
 
@@ -39,7 +39,6 @@ handleCloseUpdate = () => {
       showUpdateForm: true,
     });
   }
-  /* TODO: Make a GET request to your API to fetch all the books from the database  */
 
   getBooks = async () => {
     try {
@@ -98,10 +97,11 @@ handleCloseUpdate = () => {
     try {
       let url = `${process.env.REACT_APP_SERVER_URL}/books/${bookToUpdate._id}`;
       let updatedBook = await axios.put(url, bookToUpdate);
+      console.log(updatedBook)
       let updatedBookArray = this.state.books.map(existingBook => {
         return existingBook._id === bookToUpdate._id
-          ? updatedBook.data
-          : existingBook
+        ? updatedBook.data
+        : existingBook
       });
       this.setState({
         books: updatedBookArray
@@ -110,15 +110,11 @@ handleCloseUpdate = () => {
 
     } catch (error) {
       console.log(error.message);
-    }
-    
+    } 
   }
 
   componentDidMount() {
     this.getBooks();
-    // this.deleteBooks();
-    // this.postBook();
-    // this.handleBookSubmit();
   }
 
 
@@ -147,7 +143,7 @@ handleCloseUpdate = () => {
                     <Button onClick={() => { this.deleteBooks(book._id) }} variant="danger"> Delete a Book</Button>
                     <Button onClick={() => { this.handleShowUpdate()}} variant="info">Update</Button>
                     {this.state.showUpdateForm && 
-                    <UpdateBookForm show={this.state.showUpdateForm} book={book} handleUpdateBook={this.updateBooks} />}
+                    <UpdateBookForm show={this.state.showUpdateForm} book={book} updateBooks={this.updateBooks} />}
                   </Carousel.Caption>
 
 

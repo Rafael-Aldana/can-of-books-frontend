@@ -1,18 +1,20 @@
 import React from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 
+
+// If you forget to put VALUE onto the end of the parameters, you're gonna have a bad time. It throws a JSON Circular error
 class UpdateBookForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let bookToUpdate = {
-      title: event.target.title,
-      description: event.target.description,
-      status: event.target.status,
+      title: event.target.title.value,
+      description: event.target.description.value,
+      status: event.target.status.value,
       _id: this.props.book._id,
       __v: this.props.book.__v
     }
     console.log('UPDATED BOOK: ', bookToUpdate);
-    this.props.handleUpdateBook(bookToUpdate);
+    this.props.updateBooks(bookToUpdate);
   }
   render() {
     return (
