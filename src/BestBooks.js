@@ -135,7 +135,7 @@ handleCloseUpdate = () => {
             {this.state.books.map((book, index) => {
               return (
                 <Carousel.Item key={book.title + index}>
-                  <img src={img} alt="books" />
+                  <img src={img} alt="books" styles={{width: '100%', hieght:'25%'}}/>
                   <p>{book.title}</p>
                   <p>{book.description}</p>
                   {book.status ? (
